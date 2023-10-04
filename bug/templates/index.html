@@ -58,8 +58,19 @@
         <p>This is the homepage of our bug tracking application. You can use this app to track and manage bugs effectively.</p>
         <p>Get started by <a href="{% url 'register_bug' %}" style="font-weight: bold;">registering a bug</a>.</p>
     </main>
+        <h2> List of Bugs</h2>
+        <ul>
+            {% for bug in bugs %}
+            <li>
+                <a href="{% url 'fields_bug' bug.id %}" class="bug-link">{{ bug.bug_description }}</a>
+            </li>
+       
+            {% endfor %}
+        </ul>
     <footer>
         <p>&copy; 2023 Bug Tracking App</p>
     </footer>
 </body>
 </html>
+
+

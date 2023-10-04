@@ -11,8 +11,6 @@ def index(request):
     # retreive data from database
     bugs= Bug.objects.all()
 
-   
-    
     template = loader.get_template ('index.html')
     context = {
         'bugs': bugs,
@@ -56,6 +54,7 @@ def fields_bug(request, bug_id):
         raise Http404 ("Bug doesnot exsit")
     
     return  render(request,"bug_fields.html",{"bug" : bug})
+
 
 
 
