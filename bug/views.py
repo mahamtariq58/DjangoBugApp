@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from .models import Bug
 
 # Create your views here.
@@ -46,3 +46,18 @@ def register_bug(request):
     
     # render the bug registreation form
     return render (request, 'bug_register.html')
+
+def fields_bug(request, bug_id):
+
+    try:
+        bug = Bug.objects.get(pk=bug_id)
+
+    except Bug.DoesNotExist:
+        raise Http404 ("Bug doesnot exsit")
+    
+    return  render(request,"bug_fields.html",{"bug" : bug})
+
+
+
+
+
