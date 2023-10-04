@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template import loader
 from django.http import HttpResponse
 from .models import Bug
 
@@ -6,18 +7,22 @@ from .models import Bug
 # funtion  to register bug into database
 
 def index(request):
-
+    
     # retreive data from database
     bugs= Bug.objects.all()
 
-    data = {
+   
+    
+    template = loader.get_template ('index.html')
+    context = {
         'bugs': bugs,
     }
-    
-    return render(request, 'bug/index.html',data)
+    return HttpResponse(template.render(context,request))
 
 
 def register_bug(request):
+
+   
 
     if request.method == 'POST':
 
@@ -27,11 +32,11 @@ def register_bug(request):
         status = request.POST['status']
 
      #bug object to save in database
-        bug =Bug(
-            bug_description=bug_description,
-            bug_type=bug_type,
-            report_date=report_date,
-            status=status
+        bug = Bug(
+            bug_description = bug_description,
+            bug_type = bug_type,
+            report_date = report_date,
+            status = status
         )   
         bug.save ()
 
