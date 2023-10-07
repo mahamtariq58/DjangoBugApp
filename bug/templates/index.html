@@ -63,6 +63,11 @@
             {% for bug in bugs %}
             <li>
                 <a href="{% url 'fields_bug' bug.id %}" class="bug-link">{{ bug.bug_description }}</a>
+                <ul>
+                    <li><strong>Type:</strong> {{ bug.bug_type }}</li>
+                    <li><strong>Report Date:</strong> {{ bug.report_date }}</li>
+                    <li><strong>Status:</strong> {{ bug.status }}</li>
+                </ul>   
             </li>
        
             {% endfor %}
@@ -72,5 +77,7 @@
     </footer>
 </body>
 </html>
+
+
 
 

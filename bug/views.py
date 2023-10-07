@@ -2,15 +2,13 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.http import HttpResponse, Http404
 from .models import Bug
+from django.utils import timezone
 
 # Create your views here.
-# funtion  to register bug into database
 
 def index(request):
-    
     # retreive data from database
     bugs= Bug.objects.all()
-
     template = loader.get_template ('index.html')
     context = {
         'bugs': bugs,
@@ -20,8 +18,6 @@ def index(request):
 
 def register_bug(request):
 
-   
-
     if request.method == 'POST':
 
         bug_description =request.POST['bug_description']
@@ -29,7 +25,24 @@ def register_bug(request):
         report_date = request.POST['report_date']
         status = request.POST['status']
 
-     #bug object to save in database
+        report_date = timezone.datetime.strptime(report_date, '%Y-%m-%d').date()
+        # Check if the report_date is in the future
+        if report_date > timezone.now().date():
+            # Create a context with an error message
+            context = {
+                'error_message': 'Bug report date cannot be in the future',
+            }
+            return render(request, 'bug_register.html', context)
+        
+        # Check for duplicate bug based on bug_description
+        existing_bug = Bug.objects.filter(bug_description = bug_description).first()
+        if existing_bug:
+            context = {
+                'error_message': 'Bug report with this description already exists',
+            }
+            return render(request, 'bug_register.html', context)
+
+        #bug object to save in database
         bug = Bug(
             bug_description = bug_description,
             bug_type = bug_type,
@@ -37,8 +50,6 @@ def register_bug(request):
             status = status
         )   
         bug.save ()
-
-
         # redirect to index page when bug is registered
         return redirect(index)
     
@@ -54,6 +65,12 @@ def fields_bug(request, bug_id):
         raise Http404 ("Bug doesnot exsit")
     
     return  render(request,"bug_fields.html",{"bug" : bug})
+
+
+
+
+
+
 
 
 
