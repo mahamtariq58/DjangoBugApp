@@ -10,10 +10,8 @@ class BugAppViewTests(TestCase):
 
     # setup a common data for testing
     def setUp(self):
-
         # instance of client
         self.client = Client()
-
         self.valid_bug_data = {
             'bug_description': 'Valid Bug',
             'bug_type': 'error',
@@ -29,33 +27,18 @@ class BugAppViewTests(TestCase):
         data = self.valid_bug_data.copy()
         data['bug_description'] = 'Future Bug'
         data['report_date'] = future_date.strftime('%Y-%m-%d')  
-
-        # Perform a POST request to register the bug using the client
+        
         response = self.client.post(url, data)
-
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Bug.objects.count(), 0)
 
     def test_register_duplicate_bug(self):
 
-        # Create a bug with a known description in the database
-        existing_bug = Bug.objects.create(
-            bug_description='Bug with duplicate description',
-            bug_type='error',
-            report_date= datetime.date(2023, 10, 3),
-            status='To do',
-        )
+        existing_bug = self.valid_bug_data.copy()
+        existing_bug['bug_description'] = 'Bug with duplicate description'
 
-        post_data = {
-            'bug_description': 'Bug with duplicate description',
-            'bug_type': 'error',
-            'report_date': datetime.date(2023, 10, 3),
-            'status': 'To do',
-        }
-        
         url = reverse('register_bug')
-
-        response = self.client.post(url, post_data, follow=True)        
+        response = self.client.post(url,existing_bug, follow=True)        
         self.assertEqual(response.status_code, 200)  
         bug_count = Bug.objects.filter(bug_description='Bug with duplicate description').count()
         self.assertEqual(bug_count, 1)  
@@ -69,7 +52,7 @@ class BugAppViewTests(TestCase):
             report_date=self.valid_bug_data['report_date'],
             status=self.valid_bug_data['status'],
         )
-        
+        sample_bug = self.valid_bug_data.copy()
         url = reverse('fields_bug', args=[self.sample_bug.id])
         # Perform a GET request to the fields_bug view
         response = self.client.get(url)
