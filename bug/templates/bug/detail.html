@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Bug</title>
+</head>
+<body>
+    <h1>Bug Details</h1>
+    <ul>
+        <li><strong>Bug Description:</strong> {{ bug.bug_description }}</li>
+        <li><strong>Bug Type:</strong> {{ bug.bug_type }}</li>
+        <li><strong>Report Date:</strong> {{ bug.report_date }}</li>
+        <li><strong>Status:</strong> {{ bug.status }}</li>
+    </ul>
+    <a href="{% url 'bug:index' %}">Back to homepage</a>
+</body>
+</html>
