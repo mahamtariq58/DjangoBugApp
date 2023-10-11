@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+import datetime
 
 # Create your models here.
 class Bug(models.Model):
@@ -25,3 +27,6 @@ class Bug(models.Model):
     def __str__(self):
         return f"{self.bug_description} ({self.bug_type} - Reported on {self.report_date.strftime('%b. %d, %Y')})"
     
+    def was_published_recently(self):        
+        now = timezone.now().date()
+        return now - datetime.timedelta(days=1) <= self.report_date <= now
